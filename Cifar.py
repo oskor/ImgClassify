@@ -17,8 +17,6 @@ def one_hot(label,class_num):
     label_one_hot=(np.arange(class_num)==label[:,None]).astype(np.float32)
     return label_one_hot
 
-        
-    
 
 '''
 parameters:
@@ -41,21 +39,11 @@ def CIFAR(file_dir):
         x_train_li.append(cur_dic[b'data'])
         y_train_li.append(cur_dic[b'labels'])
     x_train=np.reshape(np.concatenate(x_train_li),(50000,3,32,32)).transpose(0,2,3,1).astype(np.float32)/255.0
-    
-    mean_train=np.mean(x_train,axis=0)
-    mean_expand=np.expand_dims(mean_train,axis=0)
-    temp=np.repeat(mean_expand,50000,axis=0)
-    x_train=x_train-temp
-    
     y_train=np.reshape(np.concatenate(y_train_li),(50000))
     y_train=one_hot(y_train,10)
     # load test data test_batch
     test_dic=unpickle(os.path.join(file_dir,'test_batch'))
     x_test=np.reshape(test_dic[b'data'],(10000,3,32,32)).transpose(0,2,3,1).astype(np.float32)/255.0
-    
-    temp=np.repeat(mean_expand,10000,axis=0)
-    x_test=x_test-temp
-    
     y_test=np.reshape(test_dic[b'labels'],(10000))
     y_test=one_hot(y_test,10)
     # load label name
@@ -63,8 +51,5 @@ def CIFAR(file_dir):
     y_names=name_dict[b'label_names']
     
     return (x_train,y_train),(x_test,y_test),y_names
-    # num=320
-    # return (x_train[:num],y_train[:num]),(x_test[:num],y_test[:num]),y_names
-    
-if __name__=='__main__':
-    (x_train,y_train),(x_test,y_test),_=CIFAR('../dataset/cifar-10-python/cifar-10-batches-py/')
+    #num=20
+    #return (x_train[:num],y_train[:num]),(x_test[:num],y_test[:num]),y_names

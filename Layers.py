@@ -51,14 +51,5 @@ def FC(name,input,n_out,activate=True):
         return fc_ret
 
        
-def CBR2D(name,input,kernel,stride,training,activate,padding='SAME'):
-    '''
-    padding:
-        SAME-out=ceil(input/s)
-        VALID-out=ceil((input-kernel+1)/s)
-    '''
-    out=Conv2D(name+'_conv',input,kernel,stride,padding,activate=False)
-    out=tf.layers.batch_normalization(out,name=name+'_bn', axis=3, training=training)
-    if activate:
-        out=tf.nn.relu(out)
-    return out
+#TODO 需要增加
+#def CBR():
