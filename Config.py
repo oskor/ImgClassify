@@ -7,6 +7,7 @@ Created on Wed Jul 17 21:17:00 2019
 from ConfigType import *
 from Augment import Augment,AugFunc
 from Resnet import ResnetCifar10
+from Model.ResnetClassify import    ResnetSimpleClassify
 
 
 class Config:
@@ -32,6 +33,7 @@ class Config:
     Image_Size=[32,32,3]  #[h,w,c]
     Class_Num=10
     Net=ResnetCifar10(9)
+    # Net=ResnetSimpleClassify(9,Class_Num)
 
     # Loss
     Loss=LossType.softmax_cross_entropy_with_logits
