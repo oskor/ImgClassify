@@ -51,17 +51,18 @@ def Eval_v1(model_name,TFRecord_file_path,image_size,class_num,batch_size):
         train_mode_=graph.get_tensor_by_name('training:0')
         keep_prob_=graph.get_tensor_by_name('keep_prob:0')
         acc_op=graph.get_tensor_by_name('acc:0')
-
-        h,w,c = image_size
-        dataset_test = ClassDatasetTFRecord(w,h,c,class_num,1,batch_size,False)
-        b_image_test,b_label_test = dataset_test(TFRecord_file_path)
+        
+        with tf.device("/cpu:0"):
+            h,w,c = image_size
+            dataset_test = ClassDatasetTFRecord(w,h,c,class_num,1,batch_size,False)
+            b_image_test,b_label_test = dataset_test(TFRecord_file_path)
 
         with tf.Session(config=tfconfig) as sess:
-            sess.run(tf.global_variables_initializer())
-            b_test_imgs,b_test_labels=sess.run([b_image_test,b_label_test])
+            sess.run(tf.global_variables_initializer())     
             acc_li=[]
             try:
                 while True:
+                    b_test_imgs,b_test_labels=sess.run([b_image_test,b_label_test])
                     b_acc=sess.run(acc_op,feed_dict={imgs_:b_test_imgs,labels_:b_test_labels,keep_prob_:1,train_mode_:False})
                     acc_li.append(b_acc)
             except tf.errors.OutOfRangeError:

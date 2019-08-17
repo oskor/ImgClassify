@@ -20,7 +20,7 @@ class Config:
 
     if Training == False:
         Evalue_Model='./ckpt_tf2/step_1000.pb'
-        Evalue_Data_Dir='../dataset/cifar-10-python/cifar-10-batches-py/'
+        Evalue_Data_Dir='../dataset/cifar-10-TFRecords/'
         Evalue_TFRecord_name =  r'cifar10_test.tfrecords'
 
     # Data
