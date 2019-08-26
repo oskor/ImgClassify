@@ -14,7 +14,6 @@ from tensorflow.python.framework import graph_util
 
 import os
 
-
 tfconfig = tf.ConfigProto()
 tfconfig.gpu_options.per_process_gpu_memory_fraction = 0.9
 tfconfig.gpu_options.allow_growth = True
@@ -259,6 +258,7 @@ class CNNTrain_v2(object):
         iterator = tf.data.Iterator.from_string_handle(self.iter_handle,train_output_type,train_output_shape)
         self.imgs_, self.labels_ = iterator.get_next()
         net_ret=self.config.Net(self.imgs_,self.train_mode_,self.keep_prob_)
+        #net_ret=self.config.Net(self.imgs_)
         # 
         self.loss=get_loss(self.config,self.labels_,net_ret)
         self.softmax_out = tf.nn.softmax(net_ret, name = 'output_node')
@@ -309,12 +309,12 @@ class CNNTrain_v2(object):
                     try:
                         while True:
                             b_test_loss,b_test_acc=sess.run((self.loss,self.accuracy),feed_dict=\
-                                {self.iter_handle:handle_test,self.keep_prob_: 1, self.train_mode_: False})
+                                {self.iter_handle:handle_test,self.keep_prob_: 1.0, self.train_mode_: False})
                             test_loss_li.append(b_test_loss)
                             test_acc_li.append(b_test_acc)
                     except tf.errors.OutOfRangeError:
                         pass
-
+                    
                     test_loss=np.average(np.array(test_loss_li))
                     test_acc=np.average(np.array(test_acc_li))
                 
@@ -358,8 +358,8 @@ class CNNTrain_v2(object):
         constant_graph = graph_util.convert_variables_to_constants(sess=sess,
                                                                 input_graph_def=sess.graph_def,
                                                                 output_node_names=self.output_nodes)
-        # for i,n in enumerate(self.constant_graph.node):
-        #     print('Name of the node - %s' % n.name)
+        #for i,n in enumerate(constant_graph.node):
+             #print('Name of the node - %s' % n.name)
         model_name=os.path.join(self.config.Model_Save_Dir,'step_'+str(step)+'.pb')
         with tf.gfile.FastGFile(model_name, mode='wb') as f:
             f.write(constant_graph.SerializeToString())

@@ -181,11 +181,12 @@ class ClassDatasetTFRecord_v2(object):
 
         if self.augment_func is not None:
             image = self.augment_func(image)
+        #image = tf.image.resize(image,[128,128])
         
         label = tf.cast(tf.convert_to_tensor(features['label']),tf.int32)
         label = tf.one_hot(label,tf.convert_to_tensor(self.class_num), 1, 0) 
         image = tf.cast(image,tf.float32)
-        image = tf.multiply(image,1/255.0)
+        image = (tf.multiply(image,1.0/255.0)-0.5)*2.0
         label = tf.cast(label,tf.float32)
 
         return image,label

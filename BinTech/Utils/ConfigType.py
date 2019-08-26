@@ -14,7 +14,7 @@ class LRPolicyType:
         _=1
     class piecewise_constant_decay:        
         boundaries=[15000,30000,75000]
-        values=[0.0008,0.0006,0.0001]
+        values=[0.003,0.0009,0.0005]
         
     class exponential_decay:
         # lr=Base_LR * decay_rate ^ (cur_step / decay_steps)

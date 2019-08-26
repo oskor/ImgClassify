@@ -7,10 +7,11 @@ Created on Wed Jul 17 21:17:00 2019
 from BinTech.Utils.ConfigType import *
 from BinTech.Utils.Augment import Augment,AugFunc,AugFuncTF
 from BinTech.Model.ResnetClassify import ResnetSimpleClassify,resnet_v2_a3_mark
+from BinTech.Model.mobilenetv3_small import MobileNetV3
 
 
 class Config:
-    Training=False      #Train-True / Evalue-False
+    Training=True      #Train-True / Evalue-False
     Model_Save_Dir='./ckpt_tf2'
     Log_Dir='./ckpt_tf2'
     Pretrained_Mode=None
@@ -36,18 +37,20 @@ class Config:
     Image_Size=[32,32,3]  #[h,w,c]
     Class_Num=10
     #Net=ResnetSimpleClassify(7,Class_Num)
-    Net = resnet_v2_a3_mark(Class_Num)
+    Net = MobileNetV3(Class_Num)
 
     # Loss
     Loss=LossType.softmax_cross_entropy_with_logits
 
     # Optimizer
-    Base_LR=3e-3 
-    LRDecay=LRPolicyType.piecewise_constant_decay
+    Base_LR=0.01
+    LRDecay=LRPolicyType.exponential_decay
+    LRDecay.decay_steps = 10000
+    LRDecay.decay_rate = 0.5
     Optimizer=OptimizerType.AdamOptimizer # adam Base_LR=0.001
 
     # Train routine
-    Epoch=1           # The maximum number of iterations
+    Epoch=100          # The maximum number of iterations
     Test_Iter=200        # Test iter num in testing (不再使用 by okorlee)
     Test_Interval=100   # Carry out testing every 500 training iterations. (不再使用 by okorlee)
     Log_Info_Snapshot = 100 # print log information every 100 training iterations by oskorlee

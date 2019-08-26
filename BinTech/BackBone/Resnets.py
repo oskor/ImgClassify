@@ -45,6 +45,6 @@ class ResnetSimple:
         # stage2
         out=self.__Block(scope+'_stage2',out,c_out=64,s_0=2,n_repeat=self.n_repeat,training=training)
         # avgpool
-        out=tf.nn.avg_pool(out,ksize=[1,8,8,1],strides=[1,1,1,1],padding='SAME')
+        out=tf.nn.avg_pool(out,ksize=[1,8,8,1],strides=[1,1,1,1],padding='SAME') #这个地方应该是valid
         
         return out
